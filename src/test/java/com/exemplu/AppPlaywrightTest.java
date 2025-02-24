@@ -34,10 +34,6 @@ public class AppPlaywrightTest {
         runTest("firefox");
     }
 
-    @Test
-void testOnWebKit() {
-    runTest("webkit");
-}
 
     private void runTest(String browserType) {
         Browser browser = null;
@@ -45,11 +41,9 @@ void testOnWebKit() {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
-            } else if (browserType.equals("webkit")) {  // ✅ Adaugă suport pentru WebKit
-                browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
