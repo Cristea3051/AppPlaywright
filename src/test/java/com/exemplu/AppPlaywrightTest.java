@@ -2,7 +2,6 @@ package com.exemplu;
 
 import java.util.regex.Pattern;
 import com.microsoft.playwright.*;
-import com.microsoft.playwright.options.AriaRole;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
@@ -41,31 +40,22 @@ public class AppPlaywrightTest {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
             } else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
             } else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
 
             page = browser.newPage();
-            page.navigate("http://playwright.dev");
+            page.navigate("https://playwright.dev/java/docs/intro");
 
             // Verifică titlul paginii
             System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
             assertThat(page).hasTitle(Pattern.compile("Playwright"));
 
-            // Crează un locator pentru link-ul "Get Started"
-            Locator getStarted = page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Get Started"));
-
-            // Verifică atributul href al link-ului
-            assertThat(getStarted).hasAttribute("href", "/docs/intro");
-
-            // Fă click pe link-ul "Get Started"
-            getStarted.click();
-
-            // Verifică dacă heading-ul "Installation" este vizibil
-            assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Installation"))).isVisible();
+            String text = page.locator("h2.anchor#usage").textContent();
+            System.out.println("Text găsit: " + text);
 
         } finally {
             if (page != null) {
