@@ -70,8 +70,10 @@ public class AppPlaywrightTest {
             Locator submitButton = page.locator("button.btn-alt-primary[type='submit']");
             submitButton.click();
 
-            String text = page.locator("text=Welcome, please login.").textContent();
-            System.out.println("Text găsit: " + text);
+            System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
+            assertThat(page).hasTitle(Pattern.compile("Dashboard - iCRM v.38.46"));
+            String welcome = page.locator("text=Welcome to our CRM System!").textContent();
+            System.out.println("Text găsit: " + welcome);
 
         } finally {
             if (page != null) {
