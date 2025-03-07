@@ -42,9 +42,9 @@ public class AppPlaywrightTest {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
@@ -61,9 +61,17 @@ public class AppPlaywrightTest {
 
             Locator emailAddress = page.locator("#login-username");
             emailAddress.fill("victor.cristea@vebo.io");
-
-            // Asertie directă, fără if
             assertEquals("victor.cristea@vebo.io", emailAddress.inputValue(), "Email field is incorrect!");
+
+            Locator password = page.locator("#login-password");
+            password.fill("j8L3pc5hJ20Sjn10Lp!");
+            assertEquals("j8L3pc5hJ20Sjn10Lp!", password.inputValue(), "password field is incorrect!");
+
+            Locator submitButton = page.locator("button.btn-alt-primary[type='submit']");
+            submitButton.click();
+
+            String text = page.locator("text=Welcome, please login.").textContent();
+            System.out.println("Text găsit: " + text);
 
         } finally {
             if (page != null) {
