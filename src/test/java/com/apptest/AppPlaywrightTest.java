@@ -3,6 +3,8 @@ package com.apptest;
 import java.util.regex.Pattern;
 import com.microsoft.playwright.*;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
+import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -67,8 +69,7 @@ public class AppPlaywrightTest {
             password.fill("j8L3pc5hJ20Sjn10Lp!");
             assertEquals("j8L3pc5hJ20Sjn10Lp!", password.inputValue(), "password field is incorrect!");
 
-            Locator submitButton = page.locator("button.btn-alt-primary[type='submit']");
-            submitButton.click();
+            page.getByRole(AriaRole.BUTTON).click();
 
             System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
             assertThat(page).hasTitle(Pattern.compile("Dashboard - iCRM v.38.46"));
