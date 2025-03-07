@@ -1,4 +1,4 @@
-package com.exemplu;
+package com.apptest;
 
 import java.util.regex.Pattern;
 import com.microsoft.playwright.*;
@@ -6,6 +6,8 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Execution(ExecutionMode.CONCURRENT)  // 🔥 Permite rularea în paralel a testelor
 public class AppPlaywrightTest {
@@ -48,14 +50,20 @@ public class AppPlaywrightTest {
             }            
 
             page = browser.newPage();
-            page.navigate("https://playwright.dev/java/docs/intro");
+            page.navigate("http://crm-dash/login");
 
             // Verifică titlul paginii
             System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
-            assertThat(page).hasTitle(Pattern.compile("Playwright"));
+            assertThat(page).hasTitle(Pattern.compile("iCRM v.38.46"));
 
-            String text = page.locator("h2.anchor#usage").textContent();
+            String text = page.locator("text=Welcome, please login.").textContent();
             System.out.println("Text găsit: " + text);
+
+            Locator emailAddress = page.locator("#login-username");
+            emailAddress.fill("victor.cristea@vebo.io");
+
+            // Asertie directă, fără if
+            assertEquals("victor.cristea@vebo.io", emailAddress.inputValue(), "Email field is incorrect!");
 
         } finally {
             if (page != null) {
