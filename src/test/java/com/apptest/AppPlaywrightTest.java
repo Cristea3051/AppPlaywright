@@ -44,9 +44,9 @@ public class AppPlaywrightTest {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
             } else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
             } else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
