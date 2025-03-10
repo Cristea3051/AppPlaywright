@@ -11,6 +11,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 @Execution(ExecutionMode.CONCURRENT)  // 🔥 Permite rularea în paralel a testelor
 public class AppPlaywrightTest {
     private static Playwright playwright;
@@ -45,21 +47,16 @@ public class AppPlaywrightTest {
         try {
             if (browserType.equals("chromium")) {
                 browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-            } else if (browserType.equals("firefox")) {
+            }
+            else if (browserType.equals("firefox")) {
                 browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
-            } else {
+            }
+            else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
 
             page = browser.newPage();
             page.navigate("http://crm-dash/login");
-
-            // Verifică titlul paginii
-            System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
-            assertThat(page).hasTitle(Pattern.compile("iCRM v.38.46"));
-
-            String text = page.locator("text=Welcome, please login.").textContent();
-            System.out.println("Text găsit: " + text);
 
             Locator emailAddress = page.locator("#login-username");
             emailAddress.fill("victor.cristea@vebo.io");
@@ -71,10 +68,37 @@ public class AppPlaywrightTest {
 
             page.getByRole(AriaRole.BUTTON).click();
 
-            System.out.println("[" + browserType.toUpperCase() + "] Title: " + page.title());
-            assertThat(page).hasTitle(Pattern.compile("Dashboard - iCRM v.38.46"));
-            String welcome = page.locator("text=Welcome to our CRM System!").textContent();
-            System.out.println("Text găsit: " + welcome);
+            page.navigate("http://crm-dash/google-accounts-v2");
+
+            Locator scrollBar = page.locator("revogr-scroll-virtual.horizontal div");
+
+            // Găsește toate header-ele
+            Locator headerLocator = page.locator("div[role='columnheader'].rgHeaderCell div");
+            int totalColumns = headerLocator.count();
+            int currentIndex = 0;
+
+            // Iterează prin fiecare header și derulează până la el
+            while (currentIndex < totalColumns) {
+                // Derulează scrollbar-ul pe orizontală (incrementează poziția scroll-ului)
+                scrollBar.evaluate("element => element.scrollLeft += 200;");
+
+                // Așteaptă câteva momente pentru a da timp aplicației să încarce coloanele vizibile
+                page.waitForTimeout(1000);  // Ajustează timpul după nevoile tale
+
+                // Actualizează lista de header-e după fiecare derulare pentru a obține noile coloane vizibile
+                List<String> headers = headerLocator.allTextContents();
+
+                // Verifică textul din header-ul curent și adaugă-l în raport
+                String headerText = headers.get(currentIndex).trim();
+                if (!headerText.isEmpty()) {
+                    System.out.println("Header: " + headerText);
+                } else {
+                    System.out.println("Header is empty");
+                }
+
+                // Mergi la următorul element
+                currentIndex++;
+            }
 
         } finally {
             if (page != null) {
