@@ -67,26 +67,25 @@ public class AppPlaywrightTest {
             assertEquals("j8L3pc5hJ20Sjn10Lp!", password.inputValue(), "password field is incorrect!");
 
             page.getByRole(AriaRole.BUTTON).click();
-
             page.navigate("http://crm-dash/google-accounts-v2");
+            page.waitForTimeout(1000);
+            Locator scrollBar = page.locator("revogr-scroll-virtual.horizontal.hydrated");
 
-            Locator scrollBar = page.locator("revogr-scroll-virtual.horizontal div");
-
-            // Găsește toate header-ele
-            Locator headerLocator = page.locator("div[role='columnheader'].rgHeaderCell div");
-            int totalColumns = headerLocator.count();
+// Găsește toate header-ele
+            Locator headerLocator = page.locator("div.rgHeaderCell div.header-content");
             int currentIndex = 0;
 
-            // Iterează prin fiecare header și derulează până la el
-            while (currentIndex < totalColumns) {
-                // Derulează scrollbar-ul pe orizontală (incrementează poziția scroll-ului)
-                scrollBar.evaluate("element => element.scrollLeft += 200;");
+            page.waitForTimeout(1000);
 
-                // Așteaptă câteva momente pentru a da timp aplicației să încarce coloanele vizibile
-                page.waitForTimeout(1000);  // Ajustează timpul după nevoile tale
-
-                // Actualizează lista de header-e după fiecare derulare pentru a obține noile coloane vizibile
+// Iterează prin fiecare header
+            while (true) {
+                // Obține lista de header-e
                 List<String> headers = headerLocator.allTextContents();
+
+                // Verifică dacă am ajuns la capătul listei
+                if (currentIndex >= headers.size()) {
+                    break;  // Ieși din buclă dacă nu mai sunt header-e de procesat
+                }
 
                 // Verifică textul din header-ul curent și adaugă-l în raport
                 String headerText = headers.get(currentIndex).trim();
@@ -96,9 +95,13 @@ public class AppPlaywrightTest {
                     System.out.println("Header is empty");
                 }
 
+                // Așteaptă câteva momente pentru a da timp aplicației să încarce coloanele vizibile
+                page.waitForTimeout(1000);  // Ajustează timpul după nevoile tale
+
                 // Mergi la următorul element
                 currentIndex++;
             }
+
 
         } finally {
             if (page != null) {
