@@ -1,5 +1,7 @@
 package com.apptest;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import com.microsoft.playwright.*;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -65,43 +67,55 @@ public class AppPlaywrightTest {
             Locator password = page.locator("#login-password");
             password.fill("j8L3pc5hJ20Sjn10Lp!");
             assertEquals("j8L3pc5hJ20Sjn10Lp!", password.inputValue(), "password field is incorrect!");
+            Locator loginButton = page.locator("button:has-text('Login')");
+            loginButton.click();
 
-            page.getByRole(AriaRole.BUTTON).click();
+            // Navighează la pagină
             page.navigate("http://crm-dash/google-accounts-v2");
             page.waitForTimeout(1000);
+
+            // Locatori
             Locator scrollBar = page.locator("revogr-scroll-virtual.horizontal.hydrated");
-
-// Găsește toate header-ele
             Locator headerLocator = page.locator("div.rgHeaderCell div.header-content");
-            int currentIndex = 0;
 
-            page.waitForTimeout(1000);
+            Set<String> foundHeaders = new HashSet<>();
+            Number initialScroll = (Number) scrollBar.evaluate("element => element.scrollLeft");
+            double initialScrollValue = initialScroll.doubleValue();
 
-// Iterează prin fiecare header
-            while (true) {
-                // Obține lista de header-e
+            boolean canScroll = true;
+            while (canScroll) {
+                // Găsește headerele vizibile
                 List<String> headers = headerLocator.allTextContents();
-
-                // Verifică dacă am ajuns la capătul listei
-                if (currentIndex >= headers.size()) {
-                    break;  // Ieși din buclă dacă nu mai sunt header-e de procesat
+                for (String header : headers) {
+                    String cleanHeader = header.trim();
+                    if (!cleanHeader.isEmpty() && !foundHeaders.contains(cleanHeader)) {
+                        foundHeaders.add(cleanHeader);
+                        System.out.println("Header găsit: " + cleanHeader);
+                    }
                 }
 
-                // Verifică textul din header-ul curent și adaugă-l în raport
-                String headerText = headers.get(currentIndex).trim();
-                if (!headerText.isEmpty()) {
-                    System.out.println("Header: " + headerText);
-                } else {
-                    System.out.println("Header is empty");
+                // Scrollează mai departe pe orizontală
+                Number prevScroll = (Number) scrollBar.evaluate("element => element.scrollLeft");
+                double prevScrollValue = prevScroll.doubleValue();
+
+                scrollBar.evaluate("element => element.scrollLeft += 300");
+
+                // Așteaptă să se încarce noile coloane
+                page.waitForTimeout(1000);
+
+                // Citim din nou poziția scroll-ului
+                Number newScroll = (Number) scrollBar.evaluate("element => element.scrollLeft");
+                double newScrollValue = newScroll.doubleValue();
+
+                // Dacă scroll-ul nu s-a mișcat, înseamnă că am ajuns la capăt
+                if (newScrollValue == prevScrollValue) {
+                    canScroll = false;
                 }
-
-                // Așteaptă câteva momente pentru a da timp aplicației să încarce coloanele vizibile
-                page.waitForTimeout(1000);  // Ajustează timpul după nevoile tale
-
-                // Mergi la următorul element
-                currentIndex++;
             }
 
+// Revenire la poziția inițială
+            scrollBar.evaluate("element => element.scrollLeft = " + initialScrollValue);
+            System.out.println("Toate headerele găsite: " + foundHeaders);
 
         } finally {
             if (page != null) {
