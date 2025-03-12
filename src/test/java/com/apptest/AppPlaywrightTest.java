@@ -48,10 +48,10 @@ public class AppPlaywrightTest {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
             }
             else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
             }
             else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
@@ -70,11 +70,9 @@ public class AppPlaywrightTest {
             Locator loginButton = page.locator("button:has-text('Login')");
             loginButton.click();
 
-            // Navighează la pagină
             page.navigate("http://crm-dash/google-accounts-v2");
             page.waitForTimeout(1000);
 
-            // Locatori
             Locator scrollBar = page.locator("revogr-scroll-virtual.horizontal.hydrated");
             Locator headerLocator = page.locator("div.rgHeaderCell div.header-content");
 
@@ -84,7 +82,7 @@ public class AppPlaywrightTest {
 
             boolean canScroll = true;
             while (canScroll) {
-                // Găsește headerele vizibile
+
                 List<String> headers = headerLocator.allTextContents();
                 for (String header : headers) {
                     String cleanHeader = header.trim();
@@ -94,28 +92,20 @@ public class AppPlaywrightTest {
                     }
                 }
 
-                // Scrollează mai departe pe orizontală
                 Number prevScroll = (Number) scrollBar.evaluate("element => element.scrollLeft");
                 double prevScrollValue = prevScroll.doubleValue();
 
                 scrollBar.evaluate("element => element.scrollLeft += 300");
 
-                // Așteaptă să se încarce noile coloane
                 page.waitForTimeout(1000);
 
-                // Citim din nou poziția scroll-ului
                 Number newScroll = (Number) scrollBar.evaluate("element => element.scrollLeft");
                 double newScrollValue = newScroll.doubleValue();
 
-                // Dacă scroll-ul nu s-a mișcat, înseamnă că am ajuns la capăt
                 if (newScrollValue == prevScrollValue) {
                     canScroll = false;
                 }
             }
-
-// Revenire la poziția inițială
-            scrollBar.evaluate("element => element.scrollLeft = " + initialScrollValue);
-            System.out.println("Toate headerele găsite: " + foundHeaders);
 
         } finally {
             if (page != null) {
