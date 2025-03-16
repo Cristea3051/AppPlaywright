@@ -1,5 +1,7 @@
 package com.apptest;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 import com.microsoft.playwright.*;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
 
 @Execution(ExecutionMode.CONCURRENT)  // 🔥 Permite rularea în paralel a testelor
 public class AppPlaywrightTest {
@@ -44,9 +48,9 @@ public class AppPlaywrightTest {
 
         try {
             if (browserType.equals("chromium")) {
-                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else if (browserType.equals("firefox")) {
-                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(true));
+                browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
             } else {
                 throw new IllegalArgumentException("Browser type not supported: " + browserType);
             }            
