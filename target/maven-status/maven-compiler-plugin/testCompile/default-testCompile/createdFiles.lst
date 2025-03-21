@@ -1,1 +1,5 @@
-com/exemplu/AppPlaywrightTest.class
+com/Base/BaseTest$TestResultWatcher.class
+com/apptest/NewTest.class
+com/apptest/AppPlaywrightTest.class
+com/Base/BaseTest.class
+com/apptest/SampleTest.class

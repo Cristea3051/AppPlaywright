@@ -1,8 +1,10 @@
 package com.apptest;
 
 import com.Base.BaseTest;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Description;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.nio.file.Paths;
 
 class AppPlaywrightTest extends BaseTest {
@@ -23,6 +25,12 @@ class AppPlaywrightTest extends BaseTest {
     void testOnWebkit() {
         launchBrowser("webkit");
         runTest("webkit");
+    }
+    @Test
+    @Description("Test minimal Allure")
+    void testMinimal() {
+        Allure.step("Pas simplu", () -> System.out.println("Test Allure"));
+        assertTrue(true);
     }
 
     private void runTest(String browserType) {
