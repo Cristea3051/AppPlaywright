@@ -29,7 +29,7 @@ class AppPlaywrightTest extends BaseTest {
     @Test
     @Description("Test minimal Allure")
     void testMinimal() {
-        Allure.step("Pas simplu", () -> System.out.println("Test Allure"));
+        Allure.step("Simple Step", () -> System.out.println("Test Allure"));
         assertTrue(true);
     }
 

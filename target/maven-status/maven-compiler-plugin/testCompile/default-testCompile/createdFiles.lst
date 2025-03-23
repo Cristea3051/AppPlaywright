@@ -1,5 +1,5 @@
-com/Base/BaseTest$TestResultWatcher.class
-com/apptest/NewTest.class
-com/apptest/AppPlaywrightTest.class
-com/Base/BaseTest.class
-com/apptest/SampleTest.class
+com\apptest\AppPlaywrightTest.class
+com\apptest\SampleTest.class
+com\Base\BaseTest.class
+com\apptest\NewTest.class
+com\Base\BaseTest$TestResultWatcher.class

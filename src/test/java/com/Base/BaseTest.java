@@ -24,12 +24,12 @@ public class BaseTest {
     private boolean testFailed = false;
 
     @BeforeEach
-    @Step("Inițializare Playwright și browser")
+    @Step("Set up Playwright and browser")
     void setUp() {
         playwright = Playwright.create();
     }
 
-    @Step("Lansare browser: {browserType}")
+    @Step("Run browser: {browserType}")
     protected void launchBrowser(String browserType) {
         BrowserType.LaunchOptions launchOptions = new BrowserType.LaunchOptions().setHeadless(true);
         if ("chromium".equalsIgnoreCase(browserType)) {
@@ -48,7 +48,7 @@ public class BaseTest {
     }
 
     @AfterEach
-    @Step("Închidere browser și Playwright")
+    @Step("Close browser and Playwright")
     void tearDown() {
         if (testFailed) {
             captureScreenshotOnFailure();
@@ -71,9 +71,9 @@ public class BaseTest {
             try {
                 Files.createDirectories(Paths.get("screenshots"));
                 byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get(screenshotPath)));
-                Allure.addAttachment("Screenshot la eșec", "image/png", Arrays.toString(screenshot), ".png");
+                Allure.addAttachment("Screenshot in fail", "image/png", Arrays.toString(screenshot), ".png");
             } catch (IOException e) {
-                System.err.println("Eroare la salvarea screenshot-ului: " + e.getMessage());
+                System.err.println("Error on saving screenshot: " + e.getMessage());
             }
         }
     }
