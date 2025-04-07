@@ -19,9 +19,7 @@ public class PlaywrightPhoneTest{
                     .setHasTouch(true));
 
             Page page = context.newPage();
-            page.navigate("https://www.google.com");
-            page.locator("[name='q']").fill("Wikipedia");
-            page.locator("[name='q']").press("Enter");
+            page.navigate("http://crm-dash/login");
             page.waitForTimeout(5000);
             page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("google_search_iphone_brazil.png")));
 
