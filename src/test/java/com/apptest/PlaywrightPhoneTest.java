@@ -19,10 +19,12 @@ public class PlaywrightPhoneTest{
                     .setHasTouch(true));
 
             Page page = context.newPage();
-            page.navigate("https://www.google.com");
+            page.navigate("http://crm-dash/login");
             page.waitForTimeout(15000); // 15 secunde să treci de CAPTCHA
-            page.locator("[name='q']").fill("Wikipedia");
-            page.locator("[name='q']").press("Enter");
+            page.locator("[name='email']").fill("victor.cristea@vebo.io");
+            page.locator("[name='password']").fill("j8L3pc5hJ20Sjn10Lp!");
+            page.locator("button[type='submit'][onclick]").click();
+
             page.waitForTimeout(5000);
             page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("google_search_iphone_moldova.png")));
 
