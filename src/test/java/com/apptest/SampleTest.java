@@ -53,8 +53,7 @@ public class SampleTest extends BaseTest {
             }
         });
 
-        // Captură screenshot și atașare la Allure test commit sa vad daca vine sau nu
-//        ADsadsadkjsdbaufbfadnviasns
+        // Captură screenshot și atașare la Allure
         String screenshotName = "screenshot_" + browserType + "_" + System.currentTimeMillis() + ".png";
         byte[] screenshot = page.screenshot(new Page.ScreenshotOptions()
                 .setPath(Paths.get(screenshotName)));
